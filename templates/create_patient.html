@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Добавить нового пациента</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#patient-form').on('submit', function(event) {
+            event.preventDefault(); // Остановить стандартное поведение формы
+
+            var formData = {
+                full_name: $('#full_name').val(),
+                birthday_date: $('#birthday_date').val(),
+                phone: $('#phone').val(),
+                passport_number: $('#passport_number').val(),
+                email: $('#email').val()
+            };
+
+            $.ajax({
+                url: '/api/patients/create',
+                type: 'POST',
+                contentType: 'application/json', // Указываем, что отправляем JSON
+                data: JSON.stringify(formData), // Преобразуем объект в JSON-строку
+                success: function(response) {
+                    // Редирект на страницу пациентов
+                    window.location.href = '/';
+                },
+                error: function(xhr, status, error) {
+                    alert('Ошибка при создании пациента.');
+                }
+            });
+        });
+    });
+</script>
+</head>
+<body>
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="/">Главная</a>
+            </div>
+            <ul class="nav navbar-nav">
+                <li><a href="/">Пациенты</a></li>
+                <li><a href="/patients/add">Добавить пациента</a></li>
+                <li><a href="/dump_excel">Сделать выгрузку</a></li>
+            </ul>
+        </div>
+    </nav>
+    <div class="container">
+        <h2>Добавить нового пациента</h2>
+        <form id="patient-form" class="form-horizontal">
+            <div class="form-group">
+                <label for="full_name" class="col-sm-2 control-label">ФИО</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="full_name" name="full_name" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="birthday_date" class="col-sm-2 control-label">Дата рождения</label>
+                <div class="col-sm-10">
+                    <input type="date" class="form-control" id="birthday_date" name="birthday_date" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="phone" class="col-sm-2 control-label">Телефон</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="phone" name="phone" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="passport_number" class="col-sm-2 control-label">Паспорт</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="passport_number" name="passport_number">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="email" class="col-sm-2 control-label">Email</label>
+                <div class="col-sm-10">
+                    <input type="email" class="form-control" id="email" name="email">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <button type="submit" class="btn btn-primary">Создать</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Карточка пациента</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <style>
+        /* Стили навигации */
+        .navbar {
+            margin-bottom: 30px;
+        }
+
+        /* Основной контейнер */
+        .container {
+            max-width: 900px;
+            margin: auto;
+        }
+
+        /* Карточка пациента */
+        .patient-details {
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            margin-bottom: 20px;
+        }
+
+        .patient-info {
+            margin-bottom: 15px;
+        }
+
+        /* Стили для периода */
+        .period-button {
+            margin-bottom: 10px;
+            width: 100%;
+            height: 60px;
+        }
+
+        .periods-container {
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Навигация -->
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="/">Главная</a>
+            </div>
+            <ul class="nav navbar-nav">
+                <li><a href="/">Пациенты</a></li>
+                <li><a href="/patients/add">Добавить пациента</a></li>
+                <li><a href="/dump_excel">Сделать выгрузку</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h2>Карточка пациента</h2>
+
+        <!-- Информация о пациенте -->
+        <div class="patient-details">
+            <div class="patient-info"><strong>ФИО:</strong> {{ patient.full_name }}</div>
+            <div class="patient-info"><strong>Дата рождения:</strong> {{ patient.birthday_date }}</div>
+            <div class="patient-info"><strong>Телефон:</strong> {{ patient.phone }}</div>
+            <div class="patient-info"><strong>Email:</strong> {% if patient.email %}{{ patient.email }}{% else %}Отсутствует{% endif %}</div>
+            <div class="patient-info"><strong>Паспорт:</strong> {% if patient.passport_number %}{{ patient.passport_number }}{% else %}Отсутствует{% endif %}</div>
+        </div>
+
+        <h3>Периоды обследования</h3>
+
+        <!-- Контейнер для кнопок периодов -->
+        <div class="periods-container">
+            {% for period in periods %}
+            <a href="/patients/{{ patient.id }}/period/{{ period.id }}/questionnaire/create" class="btn btn-primary period-button">
+                {{ period.name }}
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>

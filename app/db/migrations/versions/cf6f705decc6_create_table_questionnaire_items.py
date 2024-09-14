@@ -1,7 +1,7 @@
 """create table questionnaire item
 
 Revision ID: cf6f705decc6
-Revises: 5ed5b344e55a
+Revises: ba3bef949137
 Create Date: 2024-08-19 15:56:02.377991
 
 Doc: https://alembic.sqlalchemy.org/en/latest/tutorial.html#create-a-migration-script
@@ -15,7 +15,7 @@ from app.db.migrations.drop_enum import drop_enum
 from app.db.migrations.id_column import IdColumn
 
 revision = "cf6f705decc6"
-down_revision = "5ed5b344e55a"
+down_revision = "ba3bef949137"
 branch_labels = None
 depends_on = None
 

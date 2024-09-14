@@ -1,4 +1,5 @@
 from sqlalchemy import Column, ForeignKey, Integer
+from sqlalchemy.orm import relationship
 
 from app.db.models.base import Base
 
@@ -13,3 +14,5 @@ class QuestionGroupMappingModel(Base):
         ForeignKey("question_groups.id", ondelete="RESTRICT"),
     )
     order = Column(Integer, nullable=False)
+    # question_group = relationship("QuestionGroupModel", back_populates="questions")
+    # question = relationship("QuestionModel", back_populates="question_groups")

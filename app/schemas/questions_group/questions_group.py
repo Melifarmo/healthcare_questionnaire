@@ -1,7 +1,9 @@
 from app.schemas.base_scheme import BaseScheme
+from app.schemas.question.question import Question
 
 
 class QuestionsGroup(BaseScheme):
     id: int
     name: str
-    questionnaire_id: int
+
+    questions: list[Question]

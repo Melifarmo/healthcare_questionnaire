@@ -1,7 +1,7 @@
 """create table questionnaire
 
 Revision ID: 5ed5b344e55a
-Revises: 5ecb68b667f5
+Revises:
 Create Date: 2024-08-19 14:52:29.272919
 
 Doc: https://alembic.sqlalchemy.org/en/latest/tutorial.html#create-a-migration-script
@@ -12,7 +12,7 @@ from alembic import op
 from app.db.migrations.id_column import IdColumn
 
 revision = "5ed5b344e55a"
-down_revision = "5ecb68b667f5"
+down_revision = None
 branch_labels = None
 depends_on = None
 

@@ -1,7 +1,7 @@
 """create table question_groups_mapping
 
 Revision ID: 01064180f78e
-Revises: ba3bef949137
+Revises: cf6f705decc6
 Create Date: 2024-08-19 14:44:10.986723
 
 Doc: https://alembic.sqlalchemy.org/en/latest/tutorial.html#create-a-migration-script
@@ -12,7 +12,7 @@ from alembic import op
 from app.db.migrations.id_column import IdColumn
 
 revision = "01064180f78e"
-down_revision = "ba3bef949137"
+down_revision = "cf6f705decc6"
 branch_labels = None
 depends_on = None
 

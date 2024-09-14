@@ -1,7 +1,7 @@
 """create table patient_answers
 
 Revision ID: c95df3df8784
-Revises: 8eb1ebc789df
+Revises: 5ecb68b667f5
 Create Date: 2024-08-19 14:06:59.444315
 
 Doc: https://alembic.sqlalchemy.org/en/latest/tutorial.html#create-a-migration-script
@@ -15,7 +15,7 @@ from app.db.migrations.drop_enum import drop_enum
 from app.db.migrations.id_column import IdColumn
 
 revision = "c95df3df8784"
-down_revision = "8eb1ebc789df"
+down_revision = "5ecb68b667f5"
 branch_labels = None
 depends_on = None
 

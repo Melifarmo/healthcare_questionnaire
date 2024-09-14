@@ -10,5 +10,5 @@ class PatientModel(Base):
     full_name = Column(VARCHAR, nullable=False)
     birthday_date = Column(Date, nullable=False)
     phone = Column(VARCHAR, nullable=False)
-    password_number = Column(VARCHAR, nullable=True)
+    passport_number = Column(VARCHAR, nullable=True)
     email = Column(VARCHAR, nullable=True)

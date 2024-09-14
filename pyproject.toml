@@ -19,6 +19,8 @@ alembic = "*"
 psycopg2-binary = "*"
 
 loguru = "*"
+fastui = "^0.7.0"
+python-multipart = "^0.0.10"
 
 [tool.poetry.dev-dependencies]
 add-trailing-comma = "2.2.1"

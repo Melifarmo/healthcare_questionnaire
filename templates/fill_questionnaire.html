@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Questionnaire</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <style>
+        .question-group {
+            border: 1px solid #ccc;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        .question-group h3 {
+            margin-top: 0;
+        }
+        .btn-group-justified .btn {
+            margin-right: 5px; /* Добавляем небольшой зазор между кнопками */
+        }
+        .btn-group-justified .btn:last-child {
+            margin-right: 0; /* Убираем зазор для последней кнопки в ряду */
+        }
+        .btn-primary {
+            width: 100%;
+            font-size: 18px;
+            padding: 15px;
+            margin-top: 20px;
+        }
+        .error-message {
+            color: red;
+            margin-top: 5px;
+        }
+        .form-group.invalid label.btn {
+            border-color: red;
+        }
+        .submit-container {
+            margin-bottom: 100px;
+        }
+        .alert {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="/">Главная</a>
+            </div>
+            <ul class="nav navbar-nav">
+                <li><a href="/">Пациенты</a></li>
+                <li><a href="/questionnaire/create">Заполнить анкету</a></li>
+                <li><a href="/dump_excel">Сделать выгрузку</a></li>
+            </ul>
+        </div>
+    </nav>
+    <div class="container">
+        <!-- Информация о пациенте и периоде -->
+        <div class="patient-info">
+            <h2>Пациент: {{ patient.full_name }}</h2>
+            <h3>Период: {{ period.name }}</h3>
+        </div>
+
+        <form id="questionnaire-form">
+            {% for group in groups %}
+            <div class="question-group" data-group-id="{{ group.id }}">
+                <h3>{{ group.name }}</h3>
+                {% for question in group.questions %}
+                <div class="form-group">
+                    <h4>
+                        {{ question.text }}
+                        {% if question.is_required %}
+                        <span class="text-danger">*</span>
+                        {% endif %}
+                    </h4>
+
+                    <!-- Восстанавливаем горизонтальное расположение кнопок с небольшим зазором -->
+                    <div class="btn-group btn-group-justified" data-toggle="buttons">
+                        {% for option in question.answer_options.options %}
+                        <label class="btn btn-default">
+                            <input type="radio" name="question_{{ question.id }}" value="{{ option.id }}" autocomplete="off">
+                            {{ option.text }}
+                        </label>
+                        {% endfor %}
+                    </div>
+                    <div class="error-message" style="display: none;">Заполните обязательные вопросы</div>
+                </div>
+                {% endfor %}
+            </div>
+            {% endfor %}
+
+            <!-- Контейнер для кнопки с отступом снизу -->
+            <div class="submit-container">
+                <button type="button" class="btn btn-primary" id="submit-btn">Отправить</button>
+            </div>
+        </form>
+    </div>
+<script>
+    $(document).ready(function() {
+        $('#submit-btn').on('click', function() {
+            var valid = true;
+            var answers = [];
+            var patient_id = {{ patient.id }};
+            var period_id = {{ period.id }};
+
+            $('.question-group').each(function() {
+                var group_id = $(this).data('group-id'); // Получаем id группы
+                var questions = [];
+
+                $(this).find('.form-group').each(function() {
+                    var question_id = $(this).find('input[type="radio"]').attr('name').split('_')[1];
+                    var option_id = $(this).find('input[type="radio"]:checked').val();
+                    var is_required = $(this).find('h4 span').length > 0;
+
+                    // Если обязательный вопрос не заполнен
+                    if (is_required && !option_id) {
+                        $(this).addClass('invalid');
+                        $(this).find('.error-message').show();
+                        valid = false;
+                    } else {
+                        $(this).removeClass('invalid');
+                        $(this).find('.error-message').hide();
+                    }
+
+                    if (option_id) {
+                        questions.push({
+                            question_id: parseInt(question_id),
+                            option_id: parseInt(option_id)
+                        });
+                    }
+                });
+
+                if (questions.length > 0) {
+                    answers.push({
+                        question_group_id: parseInt(group_id),
+                        questions: questions
+                    });
+                }
+            });
+
+            // Если форма валидна, отправляем данные
+            if (valid) {
+                $.ajax({
+                    url: "/api/answers/create",
+                    type: "POST",
+                    contentType: "application/json",
+                    data: JSON.stringify({ answers: answers, patient_id: patient_id, period_id: period_id }),
+                    success: function(response) {
+                        alert('Ответы отправлены успешно!');
+                    },
+                    error: function(xhr, status, error) {
+                        alert('Ошибка при отправке ответов.');
+                    }
+                });
+            } else {
+                alert('Пожалуйста, заполните все обязательные вопросы.');
+            }
+        });
+    });
+</script>
+</body>
+</html>

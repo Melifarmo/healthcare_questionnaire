@@ -9,6 +9,7 @@ class PatientAnswerModel(Base):
 
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     question_id = Column(Integer, ForeignKey("questions.id", ondelete="RESTRICT"))
+    period_id = Column(Integer, ForeignKey("periods.id", ondelete="RESTRICT"))
     answer_option_id = Column(
         Integer,
         ForeignKey("answer_options.id", ondelete="RESTRICT"),

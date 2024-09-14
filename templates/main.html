@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Пациенты</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <style>
+        /* Стили навигации */
+        .navbar {
+            margin-bottom: 30px;
+        }
+
+        /* Карточка пациента */
+        .patient-card {
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            background-color: #f9f9f9;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Информация о пациенте в две строки */
+        .patient-info {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+        }
+
+        /* Левый и правый блоки информации */
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+
+        /* Кнопка "Открыть" */
+        .open-button {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-shrink: 0;
+            align-self: center;
+            height: 60px;
+        }
+
+        .open-button a {
+            width: 120px;
+            white-space: nowrap;
+        }
+
+        .field-label {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="/">Главная</a>
+            </div>
+            <ul class="nav navbar-nav">
+                <li><a href="/">Пациенты</a></li>
+                <li><a href="/patients/add">Добавить пациента</a></li>
+                <li><a href="/dump_excel">Сделать выгрузку</a></li>
+            </ul>
+        </div>
+    </nav>
+    <div class="container">
+        <h2>Список пациентов</h2>
+        <p>Ниже выведены уже имеющиеся пациенты, а также, если вы хотите, можете добавить нового.</p>
+
+        <div style="margin-bottom: 20px;">
+            <a href="/patients/add" class="btn btn-primary btn-lg">Добавить нового пациента</a>
+        </div>
+
+        {% for patient in patients %}
+        <div class="patient-card">
+            <div class="patient-info">
+                <!-- Первая строка информации -->
+                <div class="info-row">
+                    <span><strong>ФИО:</strong></span>
+                    <span><strong>Дата рождения:</strong> </span>
+                    <span><strong>Телефон:</strong></span>
+                    <span><strong>Email:</strong></span>
+                    <span><strong>Паспорт:</strong></span>
+                    <span><strong></strong></span>
+                </div>
+                <div class="info-row">
+                    <span>{{ patient.full_name }}</span>
+                    <span>{{ patient.birthday_date }}</span>
+                    <span>{{ patient.phone }}</span>
+                    <span>{% if patient.email %}{{ patient.email }}{% else %}Отсутствует{% endif %}</span>
+                    <span>{% if patient.passport_number %}{{ patient.passport_number }}{% else %}Отсутствует{% endif %}</span>
+                    <span><strong></strong></span>
+                </div>
+            </div>
+            <div class="open-button">
+                <a href="/patients/{{ patient.id }}" class="btn btn-info">Открыть</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</body>
+</html>

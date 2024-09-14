@@ -9,9 +9,7 @@ class AnswerOptionModel(Base):
 
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
 
-    question_id = Column(Integer, ForeignKey("questions.id", ondelete="CASCADE"))
-
     text = Column(Text, nullable=False)
     value = Column(Integer, nullable=False)  # noqa: WPS110
 
-    question = relationship("Question", back_populates="answer_options")
+    answer_option_group_id = Column(Integer, ForeignKey("answer_options_groups.id", ondelete="CASCADE"))

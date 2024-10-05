@@ -75,8 +75,9 @@
 
         <!-- Контейнер для кнопок периодов -->
         <div class="periods-container">
-            {% for period in periods %}
-            <a href="/patients/{{ patient.id }}/period/{{ period.id }}/questionnaire/create" class="btn btn-primary period-button">
+            {% for period, has_answers in periods %}
+            <a href="/patients/{{ patient.id }}/period/{{ period.id }}/questionnaire/create"
+               class="btn period-button {{ 'btn-danger' if has_answers else 'btn-primary' }}">
                 {{ period.name }}
             </a>
             {% endfor %}

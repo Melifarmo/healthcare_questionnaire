@@ -7,6 +7,7 @@ class PatientAnswer(BaseScheme):
 
     patient_id: int
     question_id: int
+    period_id: int
     questionnaire_id: int
     period_id: int | None
 

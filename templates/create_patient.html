@@ -7,35 +7,46 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-<script>
-    $(document).ready(function() {
-        $('#patient-form').on('submit', function(event) {
-            event.preventDefault(); // Остановить стандартное поведение формы
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css" />
 
-            var formData = {
-                full_name: $('#full_name').val(),
-                birthday_date: $('#birthday_date').val(),
-                phone: $('#phone').val(),
-                passport_number: $('#passport_number').val(),
-                email: $('#email').val()
-            };
+    <script>
+        $(document).ready(function() {
+            // Инициализация выбора даты
+            $('#birthday_date').datepicker({
+                dateFormat: 'yy-mm-dd', // формат даты для вашего поля
+                changeMonth: true,
+                changeYear: true,
+                yearRange: "1900:+0" // диапазон годов
+            });
 
-            $.ajax({
-                url: '/api/patients/create',
-                type: 'POST',
-                contentType: 'application/json', // Указываем, что отправляем JSON
-                data: JSON.stringify(formData), // Преобразуем объект в JSON-строку
-                success: function(response) {
-                    // Редирект на страницу пациентов
-                    window.location.href = '/';
-                },
-                error: function(xhr, status, error) {
-                    alert('Ошибка при создании пациента.');
-                }
+            $('#patient-form').on('submit', function(event) {
+                event.preventDefault(); // Остановить стандартное поведение формы
+
+                var formData = {
+                    full_name: $('#full_name').val(),
+                    birthday_date: $('#birthday_date').val(),
+                    phone: $('#phone').val(),
+                    passport_number: $('#passport_number').val(),
+                    email: $('#email').val()
+                };
+
+                $.ajax({
+                    url: '/api/patients/create',
+                    type: 'POST',
+                    contentType: 'application/json', // Указываем, что отправляем JSON
+                    data: JSON.stringify(formData), // Преобразуем объект в JSON-строку
+                    success: function(response) {
+                        // Редирект на страницу пациентов
+                        window.location.href = '/';
+                    },
+                    error: function(xhr, status, error) {
+                        alert('Ошибка при создании пациента.');
+                    }
+                });
             });
         });
-    });
-</script>
+    </script>
 </head>
 <body>
     <nav class="navbar navbar-default">
@@ -62,7 +73,7 @@
             <div class="form-group">
                 <label for="birthday_date" class="col-sm-2 control-label">Дата рождения</label>
                 <div class="col-sm-10">
-                    <input type="date" class="form-control" id="birthday_date" name="birthday_date" required>
+                    <input type="text" class="form-control" id="birthday_date" name="birthday_date" required>
                 </div>
             </div>
             <div class="form-group">

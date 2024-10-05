@@ -64,10 +64,6 @@ class Mocker:
 
         await self._session.commit()
         await self._session.refresh(self._questionnaire)
-        questionnaire = Questionnaire.from_orm(self._questionnaire)
-        for i in questionnaire.questionnaire_items:
-            print(i.question_group)
-        print(questionnaire)
 
     async def _drop_db(self):
         for model in models:

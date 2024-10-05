@@ -150,10 +150,12 @@
                     contentType: "application/json",
                     data: JSON.stringify({ answers: answers, patient_id: patient_id, period_id: period_id }),
                     success: function(response) {
-                        alert('Ответы отправлены успешно!');
+                        // Перенаправляем на страницу пациента
+                        window.location.href = `/patients/${patient_id}`;
                     },
                     error: function(xhr, status, error) {
-                        alert('Ошибка при отправке ответов.');
+                        // Уведомление об ошибке
+                        alert('Ошибка при отправке ответов. Пожалуйста, попробуйте еще раз.');
                     }
                 });
             } else {

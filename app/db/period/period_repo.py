@@ -18,4 +18,7 @@ class PeriodRepo(BaseRepository):
         return self._parse_to_schemas(rows)
 
     async def get(self, period_id: int) -> Period | None:
-        return await self._crud.get(pkey_val=period_id)
+        query = select(self.model).where(PeriodModel.id == period_id)
+
+        row = (await self._session.execute(query)).scalar()
+        return self._parse_to_schema(row)

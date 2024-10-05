@@ -12,15 +12,15 @@ SQLAlchemy = "*"
 
 fastapi = "*"
 uvicorn = "*"
-pydantic = { version = "*", extras = ["dotenv"] }
+pydantic = { version = "~1.10.4", extras = ["dotenv"] }
 
 databases = { version = "*", extras = ["postgresql"] }
 alembic = "*"
 psycopg2-binary = "*"
 
 loguru = "*"
-fastui = "^0.7.0"
 python-multipart = "^0.0.10"
+jinja2 = "^3.1.4"
 
 [tool.poetry.dev-dependencies]
 add-trailing-comma = "2.2.1"

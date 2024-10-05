@@ -9,6 +9,8 @@ class PatientAnswerModel(Base):
 
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     question_id = Column(Integer, ForeignKey("questions.id", ondelete="RESTRICT"))
+    patient_id = Column(Integer, ForeignKey("patients.id", ondelete="RESTRICT"))
+    questionnaire_id = Column(Integer, ForeignKey("questionnaires.id", ondelete="RESTRICT"))
     period_id = Column(Integer, ForeignKey("periods.id", ondelete="RESTRICT"))
     answer_option_id = Column(
         Integer,
@@ -20,4 +22,4 @@ class PatientAnswerModel(Base):
         ForeignKey("answer_options.id", ondelete="RESTRICT"),
         nullable=True,
     )
-    type = Column(Enum(PatientAnswerType), nullable=False)  # type: ignore
+    type = Column(Enum(PatientAnswerType, name='patient_answer_type'), nullable=False)  # type: ignore

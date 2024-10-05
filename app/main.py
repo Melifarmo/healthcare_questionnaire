@@ -53,6 +53,8 @@ def get_application(  # noqa: WPS213
     origins = [
         "http://127.0.0.1:8000",  # Замените на адрес вашего фронтенда
         "http://localhost:8000",
+        "http://193.227.240.222:8000",
+        "http://193.227.240.222",
     ]
 
     application.add_middleware(

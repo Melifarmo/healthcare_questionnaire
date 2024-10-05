@@ -58,12 +58,12 @@ def upgrade():
             nullable=True,
         ),
         sa.Column("answer", sa.Text(), nullable=True),
-        sa.Column("type", sa.Enum(patient_answer_type)),
+        sa.Column("type", sa.Enum(patient_answer_type, name='patient_answer_type')),
     )
     op.create_index(
         "patient_answers__unique_answer",
         "patient_answers",
-        ["patient_id", "question_id", "questionnaire_id"],
+        ["patient_id", "question_id", 'period_id', "questionnaire_id"],
         unique=True,
     )
 

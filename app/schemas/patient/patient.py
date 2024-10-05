@@ -9,5 +9,5 @@ class Patient(BaseScheme):
     full_name: str
     birthday_date: date
     phone: str
-    passport_number: int | None
+    passport_number: str | None
     email: str | None

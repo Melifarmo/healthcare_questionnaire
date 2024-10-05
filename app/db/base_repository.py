@@ -30,5 +30,5 @@ class BaseRepository:
     def _parse_to_schemas(self, instances: ScalarResult) -> list:
         return [parse_obj_as(self.schema, instance) for instance in instances]
 
-    def _parse_to_schema(self, instance) -> BaseScheme:
+    def _parse_to_schema(self, instance) -> BaseScheme | None:
         return parse_obj_as(self.schema, instance) if instance else None

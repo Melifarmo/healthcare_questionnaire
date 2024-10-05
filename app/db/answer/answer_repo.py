@@ -18,7 +18,10 @@ class PatientAnswerRepo(BaseRepository):
     schema = PatientAnswer
 
     async def create(self, answer_in_creation: PatientAnswerInCreation) -> Patient:
-        row = await self._delete()
+        await self._delete(
+            period_id=answer_in_creation.period_id,
+            question_id=answer_in_creation.question_id,
+        )
         row = await self._crud.create(model_data=answer_in_creation.dict())
         return await self._crud.get(pkey_val=row.id)
 
@@ -28,10 +31,21 @@ class PatientAnswerRepo(BaseRepository):
         rows = (await self._session.execute(query)).scalars()
         return self._parse_to_schemas(rows)
 
-    async def get(self, patient_id: int) -> Patient | None:
-        return await self._crud.get(pkey_val=patient_id)
-
-    async def _delete(self, period: int) -> Patient | None:
-        query = delete(PatientAnswerModel).where(
-            PatientAnswerModel.period_id ==,
+    async def is_answers(
+            self,
+            patient_id: int,
+            period_id: int,
+    ) -> bool:
+        query = select(PatientAnswerModel).where(
+            PatientAnswerModel.period_id == period_id,
+            PatientAnswerModel.patient_id == patient_id,
         )
+        instance = (await self._session.execute(query)).scalar()
+        return bool(instance)
+
+    async def _delete(self, period_id: int, question_id: int) -> None:
+        query = delete(PatientAnswerModel).where(
+            PatientAnswerModel.period_id == period_id,
+            PatientAnswerModel.question_id == question_id,
+        )
+        await self._session.execute(query)

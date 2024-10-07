@@ -1,8 +1,6 @@
 # Use the official Python 3.11 image as a base
 FROM python:3.11-slim
 
-RUN echo "nameserver 8.8.8.8" > /etc/resolv.conf
-
 # Install Poetry
 RUN pip install poetry -i https://pypi.org/simple
 

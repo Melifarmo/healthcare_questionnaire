@@ -1,11 +1,15 @@
 import asyncio
 from typing import Any
 
+from alembic import command
+from alembic.config import Config
 from sqlalchemy import delete, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.db.models import AnswerOptionModel
 from app.db.models.answer_options_group import AnswerOptionGroupModel
+from app.db.models.question_tags import QuestionGroupTagModel
+from app.db.patient.patient import PatientModel
 from app.db.period.periods import PeriodModel
 from app.db.models.question import QuestionModel
 from app.db.models.question_group import QuestionGroupModel
@@ -18,6 +22,7 @@ from app.schemas.question.enum.question_type import QuestionType
 from app.schemas.questionnaire.questionnaire import Questionnaire
 from app.schemas.questionnaire_item.enum.questionnaire_item_type import QuestionnaireItemType
 from mocker.questions import question_groups
+from datetime import date
 
 models = [
     AnswerOptionModel,
@@ -40,10 +45,6 @@ class Mocker:
     async def init_session(self):
         self._session = await self._get_session()
 
-    async def _get_session(self):
-        factory = await build_db_session_factory()
-        return factory()
-
     async def close(self):
         if self._session:
             await self._session.close()  # Закрываем асинхронно сессию
@@ -61,13 +62,31 @@ class Mocker:
         await self._add_questionnaire()
         await self._add_periods()
         await self._add_questionnaire_items()
+        await self._add_patient()
 
         await self._session.commit()
         await self._session.refresh(self._questionnaire)
 
+    async def _get_session(self):
+        factory = await build_db_session_factory()
+        return factory()
+
     async def _drop_db(self):
-        for model in models:
-            await self._session.execute(delete(model))
+        alembic_cfg = Config("alembic.ini")
+        command.downgrade(alembic_cfg, "base")
+        command.upgrade(alembic_cfg, "head")
+
+    async def _add_patient(self):
+        model = PatientModel(
+            id=1,
+            full_name="Тестовый пациент",
+            birthday_date=date(day=20, month=10, year=2000),
+            phone="+79001002030",
+            passport_number='11 10 100090',
+            email='some@gmail.com',
+        )
+        self._session.add(model)
+        await self._session.flush()
 
     async def _add_user(self):
         model = UserModel(
@@ -93,7 +112,7 @@ class Mocker:
         self._questionnaire = questionnaire
 
     async def _add_periods(self):
-        periods = ['до операции', 'после операции', 'месяц', 'пол года', 'год']
+        periods = ['до операции', 'после операции', 'месяц', '3 месяца', 'пол года', 'год']
         for index, period in enumerate(periods, start=1):
             model = PeriodModel(
                 id=index,
@@ -138,14 +157,21 @@ class Mocker:
         options_group_id: int,
         options: list[str],
     ):
-        values = range(0, 101, 25)
-        for option, value in (zip(options, values)):
+        for index, option in enumerate(options, start=1):
             option = AnswerOptionModel(
                 text=option,
-                value=value,
+                value=index,
                 answer_option_group_id=options_group_id,
             )
             await self._save(option)
+
+    async def _add_tags(self, tags: list[str], question_group_id: int) -> None:
+        for tag in tags:
+            tag_model = QuestionGroupTagModel(
+                question_group_id=question_group_id,
+                name=tag,
+            )
+            await self._save(tag_model)
 
     async def _add_questionnaire_item(self, question_group_data: dict, group_order: int) -> None:
         options_data = question_group_data['options']
@@ -155,6 +181,9 @@ class Mocker:
             name=question_group_data['name'],
         )
         await self._save(question_group)
+
+        tags = question_group_data['tags']
+        await self._add_tags(tags, question_group.id)
 
         for order, questions_data in enumerate(question_group_data['questions'], start=1):
             question = await self._add_question(questions_data, options_group)

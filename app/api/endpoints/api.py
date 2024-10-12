@@ -24,12 +24,9 @@ async def get_patients(
     sorting: str = None,
     db_session: AsyncSession = Depends(get_session),
 ) -> list[Patient]:
-    print(query)
-    print(1)
     repo = PatientRepo(db_session)
 
     patients = await repo.get_patients(query)
-    print(patients)
     return patients
 
 
@@ -79,7 +76,6 @@ async def save_answers(
     request: Request,
     db_session: AsyncSession = Depends(get_session),
 ):
-    print('save_answers', answers_request.period_id)
     repo = PatientAnswerRepo(db_session)
     for answer_group in answers_request.answers:
         for answer in answer_group.questions:

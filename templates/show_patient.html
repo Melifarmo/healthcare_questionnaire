@@ -32,16 +32,44 @@
             margin-bottom: 15px;
         }
 
-        /* Стили для периода */
-        .period-button {
-            margin-bottom: 10px;
-            width: 100%;
-            height: 60px;
-        }
-
+        /* Стили таблицы */
         .periods-container {
             margin-top: 30px;
         }
+
+        .period-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .period-button {
+            border-radius: 12px; /* Увеличенное закругление */
+            padding: 10px;
+            text-align: center;
+            margin-right: 10px;
+            width: 50%; /* Период занимает 50% ширины */
+            height: 54px; /* 90% от текущей высоты 60px */
+            font-weight: bold;
+        }
+
+        .period-cell {
+            flex: 1; /* Равномерное распределение ячеек */
+            width: 16.66%; /* Дата, Левая и Правая делят 50% поровну */
+            height: 54px;
+            margin-right: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            border-radius: 12px; /* Увеличенное закругление */
+        }
+
+        /* Цвета ячеек */
+        .cell-date { background-color: #d0e7f9; } /* Светло-голубой */
+        .cell-left { background-color: #c3e6cb; } /* Зеленый */
+        .cell-right { background-color: #ffeeba; } /* Желтый */
+        .cell-empty { background-color: #e0e0e0; } /* Серый для пустых ячеек */
     </style>
 </head>
 <body>
@@ -73,13 +101,30 @@
 
         <h3>Периоды обследования</h3>
 
-        <!-- Контейнер для кнопок периодов -->
+        <!-- Контейнер для кнопок периодов, которые выглядят как таблица -->
         <div class="periods-container">
-            {% for period, has_answers in periods %}
-            <a href="/patients/{{ patient.id }}/period/{{ period.id }}/questionnaire/create"
-               class="btn period-button {{ 'btn-danger' if has_answers else 'btn-primary' }}">
-                {{ period.name }}
-            </a>
+            <div class="period-row">
+                <div class="period-button"><strong>Период</strong></div>
+                <div class="period-cell"><strong>Дата операции</strong></div>
+                <div class="period-cell"><strong>Счет ЛЕВОЙ</strong></div>
+                <div class="period-cell"><strong>Счет ПРАВОЙ</strong></div>
+            </div>
+            {% for period, hands_score in periods %}
+            <div class="period-row">
+                <a href="/patients/{{ patient.id }}/period/{{ period.id }}/questionnaire/create"
+                   class="btn period-button {{ 'btn-danger' if hands_score else 'btn-primary' }}">
+                    {{ period.name }}
+                </a>
+                <div class="period-cell {{ 'cell-date' if hands_score else 'cell-empty' }}">
+                    {{ hands_score.operation_date if hands_score else '' }}
+                </div>
+                <div class="period-cell {{ 'cell-left' if hands_score else 'cell-empty' }}">
+                    {{ hands_score.left if hands_score else '' }}
+                </div>
+                <div class="period-cell {{ 'cell-right' if hands_score else 'cell-empty' }}">
+                    {{ hands_score.right if hands_score else '' }}
+                </div>
+            </div>
             {% endfor %}
         </div>
     </div>

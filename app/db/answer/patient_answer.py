@@ -1,4 +1,5 @@
 from sqlalchemy import Column, Enum, ForeignKey, Integer, Text
+from sqlalchemy.orm import relationship
 
 from app.db.models.base import Base
 from app.schemas.patient_answer.enum.patient_answer_type import PatientAnswerType
@@ -19,7 +20,8 @@ class PatientAnswerModel(Base):
     )
     answer = Column(
         Text,
-        ForeignKey("answer_options.id", ondelete="RESTRICT"),
         nullable=True,
     )
     type = Column(Enum(PatientAnswerType, name='patient_answer_type'), nullable=False)  # type: ignore
+
+    option = relationship('AnswerOptionModel', lazy='joined', foreign_keys=[answer_option_id])

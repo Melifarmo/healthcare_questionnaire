@@ -18,6 +18,14 @@ hard_options = {
         "Невероятно сложно"
     ]
 }
+choose_hand = {
+    "name": "choose-hand",
+    "options": [
+        "Левая",
+        "Правая",
+        "Обе",
+    ]
+}
 mood_options = {
     "name": "good-bad",
     "options": [

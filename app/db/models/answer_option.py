@@ -13,3 +13,5 @@ class AnswerOptionModel(Base):
     value = Column(Integer, nullable=False)  # noqa: WPS110
 
     answer_option_group_id = Column(Integer, ForeignKey("answer_options_groups.id", ondelete="CASCADE"))
+
+    # answers = relationship('PatientAnswerModel', back_populates='option', lazy='joined')

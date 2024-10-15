@@ -82,7 +82,7 @@
             <ul class="nav navbar-nav">
                 <li><a href="/">Пациенты</a></li>
                 <li><a href="/patients/add">Добавить пациента</a></li>
-                <li><a href="/dump_excel">Сделать выгрузку</a></li>
+                <li><a href="/api/statistics/excel">Сделать выгрузку</a></li>
             </ul>
         </div>
     </nav>
@@ -97,6 +97,7 @@
             <div class="patient-info"><strong>Телефон:</strong> {{ patient.phone }}</div>
             <div class="patient-info"><strong>Email:</strong> {% if patient.email %}{{ patient.email }}{% else %}Отсутствует{% endif %}</div>
             <div class="patient-info"><strong>Паспорт:</strong> {% if patient.passport_number %}{{ patient.passport_number }}{% else %}Отсутствует{% endif %}</div>
+            <div class="patient-info"><strong>Дата операции:</strong> {{ operation.operation_date }}</div>
         </div>
 
         <h3>Периоды обследования</h3>
@@ -105,7 +106,6 @@
         <div class="periods-container">
             <div class="period-row">
                 <div class="period-button"><strong>Период</strong></div>
-                <div class="period-cell"><strong>Дата операции</strong></div>
                 <div class="period-cell"><strong>Счет ЛЕВОЙ</strong></div>
                 <div class="period-cell"><strong>Счет ПРАВОЙ</strong></div>
             </div>
@@ -115,9 +115,6 @@
                    class="btn period-button {{ 'btn-danger' if hands_score else 'btn-primary' }}">
                     {{ period.name }}
                 </a>
-                <div class="period-cell {{ 'cell-date' if hands_score else 'cell-empty' }}">
-                    {{ hands_score.operation_date if hands_score else '' }}
-                </div>
                 <div class="period-cell {{ 'cell-left' if hands_score else 'cell-empty' }}">
                     {{ hands_score.left if hands_score else '' }}
                 </div>

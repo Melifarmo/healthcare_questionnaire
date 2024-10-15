@@ -27,25 +27,19 @@ class PatientAnswerRepo(BaseRepository):
         rows = (await self._session.execute(query)).scalars()
         return self._parse_to_schemas(rows)
 
-    async def get_answers_by_tags(
+    async def get_answers_by_name(
         self,
         patient_id: int,
         period_id: int,
-        tags: list[str],
+        group_name: str,
     ) -> list[PatientAnswer]:
         query = select(self.model).\
             join(QuestionModel, QuestionModel.id == self.model.question_id).\
             join(QuestionGroupMappingModel, QuestionGroupMappingModel.question_id == QuestionModel.id).\
             join(QuestionGroupModel, QuestionGroupModel.id == QuestionGroupMappingModel.question_group_id).\
-            join(QuestionGroupTagModel, QuestionGroupTagModel.question_group_id == QuestionGroupModel.id).\
             where(self.model.patient_id == patient_id).\
-            where(self.model.period_id == period_id)
-
-        ws = []
-        for tag in tags:
-            print(tag)
-            ws.append(QuestionGroupTagModel.name == tag)
-        query = query.where(*ws)
+            where(self.model.period_id == period_id).\
+            where(QuestionGroupModel.name == group_name)
 
         rows = (await self._session.execute(query)).scalars()
         return self._parse_to_schemas(rows)
@@ -64,7 +58,7 @@ class PatientAnswerRepo(BaseRepository):
         rows = (await self._session.execute(query)).scalars()
         return self._parse_to_schemas(rows)
 
-    async def is_answers(
+    async def has_answers(
             self,
             patient_id: int,
             period_id: int,

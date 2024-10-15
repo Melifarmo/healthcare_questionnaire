@@ -4,10 +4,8 @@ from sqlalchemy import select, or_
 from app.db.base_repository import BaseRepository
 from app.db.patient.patient import PatientModel
 
-from app.db.questionnaire.questionnaire import QuestionnaireModel
 from app.schemas.patient.patient import Patient
 from app.schemas.patient.patient_in_creation import PatientInCreation
-from app.schemas.questionnaire.questionnaire import Questionnaire
 
 
 class PatientRepo(BaseRepository):
@@ -20,7 +18,8 @@ class PatientRepo(BaseRepository):
         return Patient.from_orm(instance)
 
     async def get_patients(self, query: str | None = None) -> list[Patient]:
-        sql_request = select(self.model).order_by(self.model.id.desc())
+        sql_request = select(self.model).\
+            order_by(self.model.id.desc())
 
         if query:
             pattern = f'%{query}%'

@@ -3,12 +3,13 @@ from typing import Any
 
 from alembic import command
 from alembic.config import Config
-from sqlalchemy import delete, select
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.db.models import AnswerOptionModel
 from app.db.models.answer_options_group import AnswerOptionGroupModel
 from app.db.models.question_tags import QuestionGroupTagModel
+from app.db.operation.operation import OperationModel
 from app.db.patient.patient import PatientModel
 from app.db.period.periods import PeriodModel
 from app.db.models.question import QuestionModel
@@ -16,10 +17,9 @@ from app.db.models.question_group import QuestionGroupModel
 from app.db.models.question_group_mapping import QuestionGroupMappingModel
 from app.db.questionnaire.questionnaire import QuestionnaireModel
 from app.db.models.questionnaire_item import QuestionnaireItemModel
-from app.db.models.user import UserModel
+from app.db.user.user import UserModel
 from app.db.sqlalchemy import build_db_session_factory
 from app.schemas.question.enum.question_type import QuestionType
-from app.schemas.questionnaire.questionnaire import Questionnaire
 from app.schemas.questionnaire_item.enum.questionnaire_item_type import QuestionnaireItemType
 from mocker.questions import question_groups
 from datetime import date
@@ -63,6 +63,7 @@ class Mocker:
         await self._add_periods()
         await self._add_questionnaire_items()
         await self._add_patient()
+        await self._add_operation()
 
         await self._session.commit()
         await self._session.refresh(self._questionnaire)
@@ -82,8 +83,17 @@ class Mocker:
             full_name="Тестовый пациент",
             birthday_date=date(day=20, month=10, year=2000),
             phone="+79001002030",
-            passport_number='11 10 100090',
+            passport_number='1110 100090',
             email='some@gmail.com',
+        )
+        self._session.add(model)
+        await self._session.flush()
+
+    async def _add_operation(self):
+        model = OperationModel(
+            id=1,
+            operation_date=date(day=20, month=10, year=2024),
+            patient_id=1,
         )
         self._session.add(model)
         await self._session.flush()

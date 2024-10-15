@@ -1,4 +1,5 @@
 from sqlalchemy import VARCHAR, Column, Date, Integer
+from sqlalchemy.orm import relationship
 
 from app.db.models.base import Base
 

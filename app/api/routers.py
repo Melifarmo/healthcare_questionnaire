@@ -1,7 +1,7 @@
 """Configuration of routers for all endpoints."""
 from fastapi import APIRouter
 
-from app.api.endpoints.api import api_router
+from app.api.endpoints.api.api_router import api_router
 from app.api.endpoints.router import frontend_router
 
 router = APIRouter()

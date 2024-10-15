@@ -8,7 +8,9 @@ from fastapi import Request
 
 from app.api.dependencies.db_session import get_session
 from app.db.answer.answer_repo import PatientAnswerRepo
+from app.db.operation.operation_repo import OperationRepo
 from app.db.patient.patient_repo import PatientRepo
+from app.schemas.operation.operation_in_creation import OperationInCreation
 from app.schemas.patient.patient import Patient
 from app.schemas.patient.patient_in_creation import PatientInCreation
 from app.schemas.patient_answer.enum.patient_answer_type import PatientAnswerType
@@ -37,7 +39,15 @@ async def create_patient(
 ) -> Patient:
     repo = PatientRepo(db_session)
 
+    operation_repo = OperationRepo(db_session)
     patient = await repo.create_patient(new_patient)
+
+    operation = OperationInCreation(
+        patient_id=patient.id,
+        operation_date=new_patient.operation_date,
+    )
+    await operation_repo.create(operation)
+
     return patient
 
 
